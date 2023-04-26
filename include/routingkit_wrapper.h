@@ -1,7 +1,8 @@
-// #include <routingkit/contraction_hierarchy.h>
+#include <routingkit/contraction_hierarchy.h>
+#include <vector>
 
 using namespace std;
-// using namespace RoutingKit;
+using namespace RoutingKit;
 
 #if defined(_MSC_VER)
 #ifdef ROUTINGKIT_EXPORTS
@@ -15,4 +16,4 @@ using namespace std;
     #define ROUTINGKIT_API extern "C"  
 #endif
 
-ROUTINGKIT_API int* get_number();
+ROUTINGKIT_API ContractionHierarchy* get_number(unsigned node_count, unsigned tail[], unsigned head[], unsigned weight[]);

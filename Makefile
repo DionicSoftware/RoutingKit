@@ -481,13 +481,13 @@ lib/libroutingkit.so: build/bit_select.o build/bit_vector.o build/buffered_async
 # 	@mkdir -p lib
 # 	$(CC) -shared $(LDFLAGS) build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/file_data_source.o build/geo_position_to_node.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/strongly_connected_component.o build/timer.o build/vector_io.o $(OMP_LDFLAGS) -lm -lz -pthread -o lib/libroutingkit.dll
 
-build/routingkit_wrapper.o: include/routingkit_wrapper.h #include/routingkit/contraction_hierarchy.h
+build/routingkit_wrapper.o: include/routingkit_wrapper.h include/routingkit/contraction_hierarchy.h
 	@mkdir -p build
 	$(CC) $(CFLAGS) $(DLLFLAGS) -c src/routingkit_wrapper.cpp -o build/routingkit_wrapper.o
 
-lib/libroutingkit.dll: build/routingkit_wrapper.o #build/bit_vector.o build/contraction_hierarchy.o build/timer.o build/graph_util.o
+lib/libroutingkit.dll: build/routingkit_wrapper.o build/bit_vector.o build/contraction_hierarchy.o build/timer.o build/graph_util.o
 	@mkdir -p lib
-	$(CC) -s -shared $(LDFLAGS) build/routingkit_wrapper.o  -o lib/libroutingkit.dll
+	$(CC) -s -shared $(LDFLAGS) build/routingkit_wrapper.o build/bit_vector.o build/contraction_hierarchy.o build/timer.o build/graph_util.o -o lib/libroutingkit.dll
 
 clean:
 	rm -r -f build bin lib 
