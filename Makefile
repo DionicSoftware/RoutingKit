@@ -1,7 +1,8 @@
 # This makefile was automatically generated. Run ./generate_make_file to regenerate the file.
 CC=g++
 AR=ar
-CFLAGS=-Wall -DNDEBUG -march=native -ffast-math -std=c++11 -O3 -fPIC -Iinclude
+WINFLAGS=-DROUTING_KIT_ASSUME_LITTLE_ENDIAN -DROUTING_KIT_NO_ALIGNED_ALLOC -DROUTING_KIT_NO_POSIX
+CFLAGS=-Wall -DNDEBUG -march=native -ffast-math -std=c++11 -O3 -fPIC -Iinclude $(WINFLAGS)
 LDFLAGS=
 OMP_CFLAGS=-fopenmp
 OMP_LDFLAGS=-fopenmp
@@ -472,3 +473,5 @@ lib/libroutingkit.so: build/bit_select.o build/bit_vector.o build/buffered_async
 	@mkdir -p lib
 	$(CC) -shared $(LDFLAGS) build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/file_data_source.o build/geo_position_to_node.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/strongly_connected_component.o build/timer.o build/vector_io.o $(OMP_LDFLAGS) -lm -lz -pthread -o lib/libroutingkit.so
 
+clean:
+	rm -r build bin lib 
