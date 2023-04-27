@@ -16,4 +16,4 @@ using namespace RoutingKit;
     #define ROUTINGKIT_API extern "C"  
 #endif
 
-ROUTINGKIT_API ContractionHierarchy* get_number(unsigned node_count, unsigned tail[], unsigned head[], unsigned weight[]);
+ROUTINGKIT_API ContractionHierarchy* build_contraction_hierarchy(unsigned node_count, unsigned tail[], unsigned head[], unsigned weight[]);

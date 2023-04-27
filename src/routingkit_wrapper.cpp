@@ -1,7 +1,7 @@
 #include <routingkit_wrapper.h>
 
 
-ROUTINGKIT_API ContractionHierarchy* get_number(unsigned node_count, unsigned tail[], unsigned head[], unsigned weight[])
+ROUTINGKIT_API ContractionHierarchy* build_contraction_hierarchy(unsigned node_count, unsigned tail[], unsigned head[], unsigned weight[])
 {
     vector<unsigned> tail_vector(tail, tail + node_count);
     vector<unsigned> head_vector(head, head + node_count);
