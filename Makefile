@@ -281,6 +281,10 @@ build/test_buffered_asynchronous_reader.o: src/buffered_asynchronous_reader.h sr
 	@mkdir -p build
 	$(CC) $(CFLAGS)  -c src/test_buffered_asynchronous_reader.cpp -o build/test_buffered_asynchronous_reader.o
 
+build/routingkit_wrapper.o: include/routingkit_wrapper.h include/routingkit/contraction_hierarchy.h
+	@mkdir -p build
+	$(CC) $(CFLAGS) $(DLLFLAGS) -c src/routingkit_wrapper.cpp -o build/routingkit_wrapper.o
+
 bin/test_osm_simple: build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/expect.o build/file_data_source.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/test_osm_simple.o build/timer.o build/vector_io.o
 	@mkdir -p bin
 	$(CC) $(LDFLAGS) build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/expect.o build/file_data_source.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/test_osm_simple.o build/timer.o build/vector_io.o $(OMP_LDFLAGS) -lm -lz -pthread  -o bin/test_osm_simple
@@ -477,17 +481,9 @@ lib/libroutingkit.so: build/bit_select.o build/bit_vector.o build/buffered_async
 	@mkdir -p lib
 	$(CC) -shared $(LDFLAGS) build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/file_data_source.o build/geo_position_to_node.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/strongly_connected_component.o build/timer.o build/vector_io.o $(OMP_LDFLAGS) -lm -lz -pthread -o lib/libroutingkit.so
 
-# lib/libroutingkit.dll: build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/file_data_source.o build/geo_position_to_node.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/strongly_connected_component.o build/timer.o build/vector_io.o
-# 	@mkdir -p lib
-# 	$(CC) -shared $(LDFLAGS) build/bit_select.o build/bit_vector.o build/buffered_asynchronous_reader.o build/contraction_hierarchy.o build/customizable_contraction_hierarchy.o build/file_data_source.o build/geo_position_to_node.o build/graph_util.o build/id_mapper.o build/nested_dissection.o build/osm_decoder.o build/osm_graph_builder.o build/osm_profile.o build/osm_simple.o build/protobuf.o build/strongly_connected_component.o build/timer.o build/vector_io.o $(OMP_LDFLAGS) -lm -lz -pthread -o lib/libroutingkit.dll
-
-build/routingkit_wrapper.o: include/routingkit_wrapper.h include/routingkit/contraction_hierarchy.h
-	@mkdir -p build
-	$(CC) $(CFLAGS) $(DLLFLAGS) -c src/routingkit_wrapper.cpp -o build/routingkit_wrapper.o
-
 lib/libroutingkit.dll: build/routingkit_wrapper.o build/bit_vector.o build/contraction_hierarchy.o build/timer.o build/graph_util.o
 	@mkdir -p lib
-	$(CC) -s -shared $(LDFLAGS) build/routingkit_wrapper.o build/bit_vector.o build/contraction_hierarchy.o build/timer.o build/graph_util.o -o lib/libroutingkit.dll
+	$(CC) -s -shared $(LDFLAGS) build/routingkit_wrapper.o build/bit_vector.o build/contraction_hierarchy.o build/timer.o build/graph_util.o  $(OMP_LDFLAGS) -lm -lz -pthread -o lib/libroutingkit.dll
 
 clean:
 	rm -r -f build bin lib 

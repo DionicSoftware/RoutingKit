@@ -1,12 +1,22 @@
 #include <routingkit_wrapper.h>
 
 
-ROUTINGKIT_API ContractionHierarchy* build_contraction_hierarchy(unsigned node_count, unsigned tail[], unsigned head[], unsigned weight[]) {
-    vector<unsigned> tail_vector(tail, tail + node_count);
-    vector<unsigned> head_vector(head, head + node_count);
-    vector<unsigned> weight_vector(weight, weight + node_count);
+ROUTINGKIT_API ContractionHierarchy* build_contraction_hierarchy(unsigned node_count, unsigned edge_count, unsigned tail[], unsigned head[], unsigned weight[], bool* result) {
+    vector<unsigned> tail_vector(tail, tail + edge_count);
+    vector<unsigned> head_vector(head, head + edge_count);
+    vector<unsigned> weight_vector(weight, weight + edge_count);
     ContractionHierarchy* contraction_hierarchy = new ContractionHierarchy();
-    *contraction_hierarchy = ContractionHierarchy::build(node_count, tail_vector, head_vector, weight_vector);
+    try
+    {
+        *contraction_hierarchy = ContractionHierarchy::build(node_count, tail_vector, head_vector, weight_vector);
+        *result = true;
+    }
+    catch(...)
+    {
+        *result = false;
+    }
+    
+    
     return contraction_hierarchy;
 }
 
