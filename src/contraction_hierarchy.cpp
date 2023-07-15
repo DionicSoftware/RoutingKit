@@ -1094,10 +1094,16 @@ ContractionHierarchy ContractionHierarchy::build(
 	unsigned node_count, std::vector<unsigned>tail, std::vector<unsigned>head, std::vector<unsigned>weight,
 	const std::function<void(std::string)>&log_message, unsigned max_pop_count
 ){
-	assert(tail.size() == head.size());
-	assert(tail.size() == weight.size());
-	assert(max_element_of(tail) < node_count);
-	assert(max_element_of(head) < node_count);
+	size_t tail_size = tail.size();
+	size_t head_size = head.size();
+	size_t weight_size = weight.size();
+	unsigned max_element_of_tail = max_element_of(tail);
+	unsigned max_element_of_head = max_element_of(head);
+	
+	assert(tail_size == head_size);
+	assert(tail_size == weight_size);
+	assert(max_element_of_tail < node_count);
+	assert(max_element_of_head < node_count);
 
 
 	ContractionHierarchy ch;
@@ -1130,7 +1136,7 @@ ContractionHierarchy ContractionHierarchy::build(
 	build_unpacking_information(node_count, tail, head, input_arc_id, ch, ch_extra, log_message);
 
 	log_contraction_hierarchy_statistics(ch, log_message);
-
+	UnityDebug::Log("Created a CH with " + std::to_string(ch.node_count()) + " nodes, max_element_of(tail) " + std::to_string(max_element_of_tail) + ", max_element_of(head) " + std::to_string(max_element_of_head));
 	return ch;
 }
 
@@ -1460,6 +1466,7 @@ ContractionHierarchyQuery&ContractionHierarchyQuery::reset(const ContractionHier
 }
 
 ContractionHierarchyQuery&ContractionHierarchyQuery::add_source(unsigned external_s, unsigned dist_to_s){
+	UnityDebug::Log("adding source " + std::to_string(external_s) + " with node count of " + std::to_string(ch->node_count()) + " with a state of " + std::to_string(static_cast<int>(state)));
 	assert(ch && "query object must have an attached CH");
 	assert(external_s < ch->node_count() && "node out of bounds");
 	assert(state == ContractionHierarchyQuery::InternalState::initialized || state == ContractionHierarchyQuery::InternalState::target_pinned);
@@ -1482,6 +1489,7 @@ ContractionHierarchyQuery&ContractionHierarchyQuery::add_source(unsigned externa
 }
 
 ContractionHierarchyQuery&ContractionHierarchyQuery::add_target(unsigned external_t, unsigned dist_to_t){
+	UnityDebug::Log("adding target " + std::to_string(external_t) + " with node count of " + std::to_string(ch->node_count()) + " with a state of " + std::to_string(static_cast<int>(state)));
 	assert(ch && "query object must have an attached CH");
 	assert(external_t < ch->node_count() && "node out of bounds");
 	assert(state == ContractionHierarchyQuery::InternalState::initialized || state == ContractionHierarchyQuery::InternalState::source_pinned);

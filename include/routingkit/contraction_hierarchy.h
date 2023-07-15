@@ -6,6 +6,8 @@
 #include <routingkit/bit_vector.h>
 #include <routingkit/permutation.h>
 
+#include <unity_logger.h>
+
 #include <vector>
 #include <string>
 #include <functional>
