@@ -1465,12 +1465,29 @@ ContractionHierarchyQuery&ContractionHierarchyQuery::reset(const ContractionHier
 	return *this;
 }
 
-ContractionHierarchyQuery&ContractionHierarchyQuery::add_source(unsigned external_s, unsigned dist_to_s){
+ContractionHierarchyQuery&ContractionHierarchyQuery::add_source(unsigned external_s, bool* failed, unsigned dist_to_s){
+	if (!ch) { 
+		*failed = true;
+		UnityDebug::Log("failed to add source of " + std::to_string(external_s) + " because query object must have an attached CH", LogType::Error);
+		return *this;
+	}
 	UnityDebug::Log("adding source " + std::to_string(external_s) + " with node count of " + std::to_string(ch->node_count()) + " with a state of " + std::to_string(static_cast<int>(state)));
-	assert(ch && "query object must have an attached CH");
-	assert(external_s < ch->node_count() && "node out of bounds");
-	assert(state == ContractionHierarchyQuery::InternalState::initialized || state == ContractionHierarchyQuery::InternalState::target_pinned);
+	if (external_s >= ch->node_count()) {
+		*failed = true;
+		UnityDebug::Log("failed to add source because external_s >= node_count! target " + std::to_string(external_s) + " with node count of " + std::to_string(ch->node_count()), LogType::Error);
+		return *this;
+	}
+	if (state != ContractionHierarchyQuery::InternalState::initialized && state != ContractionHierarchyQuery::InternalState::source_pinned) {
+		*failed = true;
+		UnityDebug::Log("failed to add source because state has wrong value of " + std::to_string(static_cast<int>(state)), LogType::Error);
+		return *this;
+	}
 
+	return add_source(external_s, dist_to_s);
+}
+
+
+ContractionHierarchyQuery&ContractionHierarchyQuery::add_source(unsigned external_s, unsigned dist_to_s){
 	unsigned s = ch->rank[external_s];
 
 	if(!forward_queue.contains_id(s)){
@@ -1488,12 +1505,27 @@ ContractionHierarchyQuery&ContractionHierarchyQuery::add_source(unsigned externa
 	return *this;
 }
 
-ContractionHierarchyQuery&ContractionHierarchyQuery::add_target(unsigned external_t, unsigned dist_to_t){
+ContractionHierarchyQuery&ContractionHierarchyQuery::add_target(unsigned external_t, bool* failed, unsigned dist_to_t){
+	if (!ch) {
+		*failed = true;
+		UnityDebug::Log("failed to add target of " + std::to_string(external_t) + " because query object must have an attached CH", LogType::Error);
+		return *this;
+	}
 	UnityDebug::Log("adding target " + std::to_string(external_t) + " with node count of " + std::to_string(ch->node_count()) + " with a state of " + std::to_string(static_cast<int>(state)));
-	assert(ch && "query object must have an attached CH");
-	assert(external_t < ch->node_count() && "node out of bounds");
-	assert(state == ContractionHierarchyQuery::InternalState::initialized || state == ContractionHierarchyQuery::InternalState::source_pinned);
+	if (external_t >= ch->node_count()) {
+		*failed = true;
+		UnityDebug::Log("failed to add target because external_t >= node_count! target " + std::to_string(external_t) + " with node count of " + std::to_string(ch->node_count()), LogType::Error);
+		return *this;
+	}
+	if (state != ContractionHierarchyQuery::InternalState::initialized && state != ContractionHierarchyQuery::InternalState::source_pinned) {
+		*failed = true;
+		UnityDebug::Log("failed to add target because state has wrong value of " + std::to_string(static_cast<int>(state)), LogType::Error);
+		return *this;
+	}
+	return add_target(external_t, dist_to_t);
+}
 
+ContractionHierarchyQuery&ContractionHierarchyQuery::add_target(unsigned external_t, unsigned dist_to_t){
 	unsigned t = ch->rank[external_t];
 	if(!backward_queue.contains_id(t)){
 		backward_queue.push({t, dist_to_t});

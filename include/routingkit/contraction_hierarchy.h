@@ -111,6 +111,9 @@ public:
 	ContractionHierarchyQuery&reset();
 	ContractionHierarchyQuery&reset(const ContractionHierarchy&ch);
 
+	ContractionHierarchyQuery&add_source(unsigned s, bool* failed, unsigned dist_to_s = 0);
+	ContractionHierarchyQuery&add_target(unsigned t, bool* failed, unsigned dist_to_t = 0);
+
 	ContractionHierarchyQuery&add_source(unsigned s, unsigned dist_to_s = 0);
 	ContractionHierarchyQuery&add_target(unsigned t, unsigned dist_to_t = 0);
 

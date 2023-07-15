@@ -27,12 +27,12 @@ ROUTINGKIT_API void reset_contraction_hierarchy_query(RoutingKit::ContractionHie
     contraction_hierarchy_query->reset();
 }
 
-ROUTINGKIT_API void contraction_hierarchy_query_add_source(RoutingKit::ContractionHierarchyQuery* contraction_hierarchy_query, unsigned source) {
-    contraction_hierarchy_query->add_source(source);
+ROUTINGKIT_API void contraction_hierarchy_query_add_source(RoutingKit::ContractionHierarchyQuery* contraction_hierarchy_query, unsigned source, bool* failed) {
+    contraction_hierarchy_query->add_source(source, failed);
 }
 
-ROUTINGKIT_API void contraction_hierarchy_query_add_target(RoutingKit::ContractionHierarchyQuery* contraction_hierarchy_query, unsigned target) {
-    contraction_hierarchy_query->add_target(target);
+ROUTINGKIT_API void contraction_hierarchy_query_add_target(RoutingKit::ContractionHierarchyQuery* contraction_hierarchy_query, unsigned target, bool* failed) {
+    contraction_hierarchy_query->add_target(target, failed);
 }
 
 ROUTINGKIT_API void run_contraction_hierarchy_query(RoutingKit::ContractionHierarchyQuery* contraction_hierarchy_query) {
