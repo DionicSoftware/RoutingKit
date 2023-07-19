@@ -18,7 +18,7 @@
     #define ROUTINGKIT_API extern "C"
 #endif
 
-ROUTINGKIT_API RoutingKit::ContractionHierarchy* build_contraction_hierarchy(unsigned node_count, unsigned edge_count, unsigned tail[], unsigned head[], unsigned weight[]);
+ROUTINGKIT_API RoutingKit::ContractionHierarchy* build_contraction_hierarchy(unsigned node_count, unsigned edge_count, unsigned tail[], unsigned head[], unsigned weight[], bool* failed);
 ROUTINGKIT_API void free_contraction_hierarchy(RoutingKit::ContractionHierarchy* contraction_hierarchy);
 ROUTINGKIT_API RoutingKit::ContractionHierarchyQuery* build_contraction_hierarchy_query(RoutingKit::ContractionHierarchy* contraction_hierarchy);
 ROUTINGKIT_API void free_contraction_hierarchy_query(RoutingKit::ContractionHierarchyQuery* contraction_hierarchy_query);

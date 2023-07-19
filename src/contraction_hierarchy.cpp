@@ -1089,9 +1089,8 @@ namespace {
 	}
 }
 
-
 ContractionHierarchy ContractionHierarchy::build(
-	unsigned node_count, std::vector<unsigned>tail, std::vector<unsigned>head, std::vector<unsigned>weight,
+	unsigned node_count, std::vector<unsigned>tail, std::vector<unsigned>head, std::vector<unsigned>weight, bool* failed,
 	const std::function<void(std::string)>&log_message, unsigned max_pop_count
 ){
 	size_t tail_size = tail.size();
@@ -1099,13 +1098,40 @@ ContractionHierarchy ContractionHierarchy::build(
 	size_t weight_size = weight.size();
 	unsigned max_element_of_tail = max_element_of(tail);
 	unsigned max_element_of_head = max_element_of(head);
+
+	ContractionHierarchy ch;
 	
-	assert(tail_size == head_size);
-	assert(tail_size == weight_size);
-	assert(max_element_of_tail < node_count);
-	assert(max_element_of_head < node_count);
+	if (tail_size != head_size) {
+		*failed = true;
+		UnityDebug::Log("Failed to create CH: tail_size != head_size " + std::to_string(tail_size) + " != " + std::to_string(head_size), LogType::Error);
+		return ch;
+	}
+	if (tail_size != weight_size) {
+		*failed = true;
+		UnityDebug::Log("Failed to create CH: tail_size != weight_size " + std::to_string(tail_size) + " != " + std::to_string(weight_size), LogType::Error);
+		return ch;
+	}
+	if (max_element_of_tail >= node_count) {
+		*failed = true;
+		UnityDebug::Log("Failed to create CH: max_element_of_tail >= node_count " + std::to_string(max_element_of_tail) + " != " + std::to_string(node_count), LogType::Error);
+		return ch;
+	}
+	if (max_element_of_head >= node_count) {
+		*failed = true;
+		UnityDebug::Log("Failed to create CH: max_element_of_head >= node_count " + std::to_string(max_element_of_head) + " != " + std::to_string(node_count), LogType::Error);
+		return ch;
+	}
+
+	ch = build(node_count, tail, head, weight, log_message, max_pop_count);
+	UnityDebug::Log("Created a CH with " + std::to_string(ch.node_count()) + " nodes, max_element_of(tail) " + std::to_string(max_element_of_tail) + ", max_element_of(head) " + std::to_string(max_element_of_head));
+	return ch;
+}
 
 
+ContractionHierarchy ContractionHierarchy::build(
+	unsigned node_count, std::vector<unsigned>tail, std::vector<unsigned>head, std::vector<unsigned>weight,
+	const std::function<void(std::string)>&log_message, unsigned max_pop_count
+){
 	ContractionHierarchy ch;
 	ContractionHierarchyExtraInfo ch_extra;
 
@@ -1136,7 +1162,6 @@ ContractionHierarchy ContractionHierarchy::build(
 	build_unpacking_information(node_count, tail, head, input_arc_id, ch, ch_extra, log_message);
 
 	log_contraction_hierarchy_statistics(ch, log_message);
-	UnityDebug::Log("Created a CH with " + std::to_string(ch.node_count()) + " nodes, max_element_of(tail) " + std::to_string(max_element_of_tail) + ", max_element_of(head) " + std::to_string(max_element_of_head));
 	return ch;
 }
 
